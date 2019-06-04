@@ -141,8 +141,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fa7fc0c13061824999d0bdea0262cfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayerObject: {fileID: 0}
-  m_PlayerGeneratePosition: []
+  m_PlayerGeneratePosition:
+  - {x: -4, y: 4, z: 0}
+  - {x: 4, y: 4, z: 0}
+  - {x: -4, y: -4, z: 0}
+  - {x: 4, y: -4, z: 0}
 --- !u!4 &964560210
 Transform:
   m_ObjectHideFlags: 0

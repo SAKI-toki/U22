@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
+        var moveValue = new Vector3(SwitchInput.GetHorizontal(m_ThisPlayerNumber), SwitchInput.GetVertical(m_ThisPlayerNumber), 0.0f);
+        transform.Translate(moveValue * Time.deltaTime * Config.GetInstance().PlayerMoveSpeed);
     }
 }

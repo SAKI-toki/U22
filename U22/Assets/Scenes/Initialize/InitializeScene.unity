@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7876e97bab9c7544389f527613f47199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audio_mixer: {fileID: 24100000, guid: 7a8603eef146c48458a9a0b7d197bbb4, type: 2}
+  m_AudioMixer: {fileID: 0}
 --- !u!114 &2983391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,6 +298,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad85b5fe479b25048b5580de91e5e355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_PlayerObject: {fileID: 7880624504105669674, guid: e913fdb7be3843342961830d1846ee24,
+    type: 3}
+  m_PlayerMoveSpeed: 5
 --- !u!4 &1516561862
 Transform:
   m_ObjectHideFlags: 0
