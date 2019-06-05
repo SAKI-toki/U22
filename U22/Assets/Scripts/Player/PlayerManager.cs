@@ -14,6 +14,7 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {
+        //プレイヤーの人数が2以上かつ4以下じゃない場合はエラー
         if (PlayerNumberCheckManager.m_PlayerNumber < 2 || PlayerNumberCheckManager.m_PlayerNumber > 4)
         {
             Debug.LogError("プレイヤーの人数が2未満、または4より多いです");
