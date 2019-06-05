@@ -25,11 +25,6 @@ public class PlayerNumberCheckManager : MonoBehaviour
             m_State.StateInit();
         }
     }
-
-    void OnDestroy()
-    {
-        m_State.StateDestroy();
-    }
 }
 
 /// <summary>

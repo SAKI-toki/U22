@@ -17,8 +17,8 @@ public enum SwitchButton : long
     StickRight = NpadButton.StickRUp | NpadButton.StickLDown,
     StickLeft = NpadButton.StickRDown | NpadButton.StickLUp,
     Pause = NpadButton.Plus | NpadButton.Minus,
-    Ok = SwitchButton.Down,
-    Cancel = SwitchButton.Right,
+    Ok = SwitchButton.Right,
+    Cancel = SwitchButton.Down,
     None = 0
 }
 
