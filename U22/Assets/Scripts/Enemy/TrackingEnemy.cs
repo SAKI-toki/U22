@@ -15,21 +15,13 @@ public class TrackingEnemy : MonoBehaviour
     [SerializeField, Range(0, 360), Header("最大視野角")]
     int m_MaxSight;
 
-    float m_MaxAngle;
-    float m_MinAngle;
     float m_Angle;
-
-    const float m_Speed = 5;
+    const float m_Speed = 2;
     // Start is called before the first frame update
     void Start()
     {
         m_DisplayMax = Camera.main.ViewportToWorldPoint(Vector2.one);
         m_DisplayMin = Camera.main.ViewportToWorldPoint(Vector2.zero);
-
-        m_MaxAngle = transform.eulerAngles.z + m_MaxSight / 2;
-        m_MinAngle = transform.eulerAngles.z - m_MaxSight / 2;
-        Debug.Log(m_MaxAngle);
-        Debug.Log(m_MinAngle);
 
         InvokeRepeating("NearPlayerSearch", 0f, 5f);
     }
@@ -37,14 +29,19 @@ public class TrackingEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (m_Target != null)
         {
-            vecDifference = (m_Target.transform.position - this.gameObject.transform.position).normalized;
-            m_Angle = Mathf.Atan2(vecDifference.y, vecDifference.x) * Mathf.Rad2Deg;
-            Debug.Log(m_Angle);
-            if ((m_Angle < m_MaxAngle && m_Angle > m_MinAngle) && Vector2.Distance(gameObject.transform.position, m_Target.transform.position) < 1)
+            //ターゲットへの方向ベクトルを求める
+            vecDifference = (m_Target.transform.position - transform.position).normalized;
+
+            //敵の向いている方向からターゲットへの角度を求める
+            m_Angle = Vector2.Angle(transform.up, vecDifference);
+
+            //ターゲットへの角度が視野角以内,だったら追尾を開始する
+            if (m_Angle < m_MaxSight / 2 && Vector2.Distance(transform.position,m_Target.transform.position) < 3)
             {
-                transform.up = Vector2.Lerp(transform.position, m_Target.transform.position, Time.deltaTime * m_Speed);
+                transform.up = Vector2.Lerp(transform.up, vecDifference, Time.deltaTime * 10);
             }
         }
 
