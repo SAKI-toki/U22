@@ -6,18 +6,9 @@ using nn.hid;
 static public class SwitchVibration
 {
     //デバイスのハンドラ
-    static VibrationDeviceHandle[] m_VibrationDeviceHandles;
+    static VibrationDeviceHandle[] m_VibrationDeviceHandles = new VibrationDeviceHandle[1];
     //振動の値
     static VibrationValue m_VibrationValue = VibrationValue.Make();
-
-    /// <summary>
-    /// 振動の初期化
-    /// </summary>
-    static public void VibrationInit()
-    {
-        //配列の要素確保
-        m_VibrationDeviceHandles = new VibrationDeviceHandle[1];
-    }
 
     /// <summary>
     /// 低周波の振動
