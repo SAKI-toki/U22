@@ -6,7 +6,7 @@ using nn.hid;
 public class SwitchManager : Singleton<SwitchManager>
 {
     //使用するID
-    NpadId[] m_NpadIds = { NpadId.No1, NpadId.No2, NpadId.No3, NpadId.No4 };
+    NpadId[] m_NpadIds = { NpadId.No1, NpadId.No2 };
 
     //使用するコントローラーのスタイル
     NpadStyle m_NpadStyles = NpadStyle.JoyLeft | NpadStyle.JoyRight;
