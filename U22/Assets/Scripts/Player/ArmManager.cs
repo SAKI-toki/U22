@@ -28,23 +28,7 @@ public class ArmManager
     public void ArmInitialize(int _PlayerNumber)
     {
         m_PlayerNumber = _PlayerNumber;
-        //エラーチェックやNullチェック
-        if (m_RotationSpeed <= 0.0f)
-        {
-            Debug.LogError("腕の回転速度が0以下です");
-        }
-        if (m_MinAngle > m_MaxAngle)
-        {
-            Debug.LogError("最小角度が最大角度より大きいです");
-        }
-        if (!m_RightArmObject)
-        {
-            Debug.LogError("右腕のオブジェクトがありません");
-        }
-        if (!m_LeftArmObject)
-        {
-            Debug.LogError("左腕のオブジェクトがありません");
-        }
+        ErrorCheck();
     }
 
     /// <summary>
@@ -53,6 +37,18 @@ public class ArmManager
     public void ArmUpdate()
     {
         ArmRotation();
+    }
+
+    /// <summary>
+    /// 腕の固定更新
+    /// </summary>
+    public void ArmFixedUpdate()
+    {
+        //最小、最大角度にClamp
+        m_RotationValue = Mathf.Clamp(m_RotationValue, m_MinAngle, m_MaxAngle);
+        //角度を設定
+        m_RightArmObject.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -m_RotationValue);
+        m_LeftArmObject.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, m_RotationValue);
     }
 
     /// <summary>
@@ -70,10 +66,28 @@ public class ArmManager
         {
             m_RotationValue -= m_RotationSpeed * Time.deltaTime;
         }
-        //最小、最大角度にClamp
-        m_RotationValue = Mathf.Clamp(m_RotationValue, m_MinAngle, m_MaxAngle);
-        //角度を設定
-        m_RightArmObject.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -m_RotationValue);
-        m_LeftArmObject.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, m_RotationValue);
+    }
+
+    /// <summary>
+    /// エラーチェック
+    /// </summary>
+    void ErrorCheck()
+    {
+        if (m_RotationSpeed <= 0.0f)
+        {
+            Debug.LogError("腕の回転速度が0以下です");
+        }
+        if (m_MinAngle > m_MaxAngle)
+        {
+            Debug.LogError("最小角度が最大角度より大きいです");
+        }
+        if (!m_RightArmObject)
+        {
+            Debug.LogError("右腕のオブジェクトがありません");
+        }
+        if (!m_LeftArmObject)
+        {
+            Debug.LogError("左腕のオブジェクトがありません");
+        }
     }
 }
