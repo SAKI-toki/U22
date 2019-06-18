@@ -5,6 +5,8 @@
 [Bb]uilds/
 .vscode/
 NintendoSDKPlugin/
+SwitchIL2CPPCache/
+SwitchIL2CPPStats/
 Assets/AssetStoreTools*
 
 # Visual Studio cache directory

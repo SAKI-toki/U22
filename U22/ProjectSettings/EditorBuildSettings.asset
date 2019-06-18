@@ -6,20 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test/Switch/GyroTest.unity
-    guid: 6c512b5d5bd93c245b742bfbf76b3644
-  - enabled: 0
     path: Assets/Scenes/Title/TitleScene.unity
     guid: f842af7e3f7b05f45a8b1b801080ed38
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Select/SelectScene.unity
     guid: 9d77c80965ed3a24996b25792da0887b
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Game/PlayerNumCheckScene.unity
     guid: 30a9b2b4b8b410942898a564613fa28f
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/Game/GameScene.unity
+    guid: 8f203ffe1a646864d9ac66f0423d40b9
   - enabled: 1
     path: Assets/Scenes/Initialize/InitializeScene.unity
     guid: a357b15ad1caa6344b5daa5452b95364
