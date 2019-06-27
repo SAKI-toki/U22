@@ -40,18 +40,6 @@ public class ArmManager
     }
 
     /// <summary>
-    /// 腕の固定更新
-    /// </summary>
-    public void ArmFixedUpdate()
-    {
-        //最小、最大角度にClamp
-        m_RotationValue = Mathf.Clamp(m_RotationValue, m_MinAngle, m_MaxAngle);
-        //角度を設定
-        m_RightArmObject.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -m_RotationValue);
-        m_LeftArmObject.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, m_RotationValue);
-    }
-
-    /// <summary>
     /// 回転処理
     /// </summary>
     void ArmRotation()
@@ -66,6 +54,11 @@ public class ArmManager
         {
             m_RotationValue -= m_RotationSpeed * Time.deltaTime;
         }
+        //最小、最大角度にClamp
+        m_RotationValue = Mathf.Clamp(m_RotationValue, m_MinAngle, m_MaxAngle);
+        //角度を設定
+        m_RightArmObject.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -m_RotationValue);
+        m_LeftArmObject.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, m_RotationValue);
     }
 
     /// <summary>

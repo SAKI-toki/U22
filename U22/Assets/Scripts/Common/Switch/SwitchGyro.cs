@@ -21,7 +21,7 @@ static public class SwitchGyro
     {
         //キーがない場合は追加しておく
         if (!m_BaseGyro.ContainsKey(_Index)) m_BaseGyro.Add(_Index, 0.0f);
-        m_BaseGyro[_Index] = GetGyroX(_Index) + m_BaseGyro[_Index] - 90;
+        m_BaseGyro[_Index] = GetGyroX(_Index) + m_BaseGyro[_Index];
     }
 
     /// <summary>
@@ -50,11 +50,11 @@ static public class SwitchGyro
         //右か左で返す値を変換する
         if (npadStyle == NpadStyle.JoyRight)
         {
-            return m_GyroState.angle.x % 1 * 360 - 90 - m_BaseGyro[_Index];
+            return m_GyroState.angle.x % 1 * 360 - m_BaseGyro[_Index];
         }
         else
         {
-            return m_GyroState.angle.x % 1 * -360 + 90 - m_BaseGyro[_Index];
+            return m_GyroState.angle.x % 1 * -360 - m_BaseGyro[_Index];
         }
     }
 }

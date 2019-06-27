@@ -298,9 +298,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad85b5fe479b25048b5580de91e5e355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayerObject: {fileID: 3437932584070399606, guid: d8c2f687cdbe1c543b0c4c80094013c2,
-    type: 3}
-  m_PlayerMoveSpeed: 5
+  m_PlayerMoveSpeed: 0.1
+  m_PlayerRotationSpeed: 20
+  m_ConnectPlayerRotationSpeed: 1
+  m_GyroDeadZone: 10
 --- !u!4 &1516561862
 Transform:
   m_ObjectHideFlags: 0

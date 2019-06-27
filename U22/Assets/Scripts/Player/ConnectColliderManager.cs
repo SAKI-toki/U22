@@ -9,6 +9,7 @@ public class ConnectColliderManager : MonoBehaviour
     public class ConnectPair
     {
         public GameObject m_Right = null, m_Left = null;
+        public SpriteRenderer m_RightSpriteRenderer = null, m_LeftSpriteRenderer = null;
     }
     [SerializeField, Header("接続リスト")]
     ConnectPair[] m_ConnectPairs = new ConnectPair[PlayerNumberCheck.m_PlayerNumber];
@@ -20,17 +21,16 @@ public class ConnectColliderManager : MonoBehaviour
     float m_ColliderRadius = 0.0f;
 
     //1Pを基準に接続されているか判定する
-    bool m_IsRightConnect = false, m_IsLeftConnect = false;
+    bool m_IsCurrentRightConnect = false, m_IsCurrentLeftConnect = false,
+    m_IsPrevRightConnect = false, m_IsPrevLeftConnect = false;
     //両方の接続がそろったフラグ
     bool m_IsBothConnect = false;
-    //Joint
-    FixedJoint2D m_Player1Joint2D = null;
-
+    Vector3 m_ConnectPosition = new Vector3();
     /// <summary>
     /// 接続かどうかのプロパティ
     /// </summary>
-    public bool IsConnect { get { return !m_IsBothConnect && (m_IsRightConnect || m_IsLeftConnect); } }
-    public Vector2 ConnectPosition { get { return (m_Player1Joint2D) ? m_Player1Joint2D.anchor : Vector2.zero; } }
+    public bool IsConnect { get { return !m_IsBothConnect && (m_IsCurrentRightConnect || m_IsCurrentLeftConnect); } }
+    public Vector3 ConnectPosition { get { return m_ConnectPosition; } }
 
     void Start()
     {
@@ -41,53 +41,50 @@ public class ConnectColliderManager : MonoBehaviour
             m_ConnectPairs[0].m_Right.transform.lossyScale.x * 2, 2);
     }
 
-    void FixedUpdate()
+    void Update()
     {
+        m_IsPrevRightConnect = m_IsCurrentRightConnect;
+        m_IsPrevLeftConnect = m_IsCurrentLeftConnect;
         //右の接続
-        m_IsRightConnect =
+        m_IsCurrentRightConnect =
             (m_ConnectPairs[0].m_Right.transform.position -
             m_ConnectPairs[1].m_Left.transform.position).sqrMagnitude < m_ColliderRadius;
         //左の接続
-        m_IsLeftConnect =
+        m_IsCurrentLeftConnect =
             (m_ConnectPairs[0].m_Left.transform.position -
             m_ConnectPairs[1].m_Right.transform.position).sqrMagnitude < m_ColliderRadius;
+
+        m_ConnectPairs[0].m_RightSpriteRenderer.color = (m_IsCurrentRightConnect) ? Color.red : Color.white;
+        m_ConnectPairs[1].m_RightSpriteRenderer.color = (m_IsCurrentLeftConnect) ? Color.red : Color.white;
+        m_ConnectPairs[0].m_LeftSpriteRenderer.color = (m_IsCurrentLeftConnect) ? Color.red : Color.white;
+        m_ConnectPairs[1].m_LeftSpriteRenderer.color = (m_IsCurrentRightConnect) ? Color.red : Color.white;
 
         //両方接続したフラグ
         if (m_IsBothConnect)
         {
             //どちらも離れたらfalse
-            if (!m_IsRightConnect && !m_IsLeftConnect) m_IsBothConnect = false;
+            if (!m_IsCurrentRightConnect && !m_IsCurrentLeftConnect) m_IsBothConnect = false;
         }
         //どちらも接続している
-        else if (m_IsRightConnect && m_IsLeftConnect)
+        else if (m_IsCurrentRightConnect && m_IsCurrentLeftConnect)
         {
             GeneratePolygonCollider();
-            Destroy(m_Player1Joint2D);
             m_IsBothConnect = true;
         }
         //どちらか接続している
-        else if (m_IsRightConnect || m_IsLeftConnect)
+        else if (m_IsCurrentRightConnect || m_IsCurrentLeftConnect)
         {
-            if (!m_Player1Joint2D)
+            //接続点の設定
+            if (!m_IsPrevRightConnect && m_IsCurrentRightConnect)
             {
-                m_Player1Joint2D = m_Player1.AddComponent<FixedJoint2D>();
-                m_Player1Joint2D.connectedBody = m_Player2.GetComponent<Rigidbody2D>();
+                m_ConnectPosition = (m_ConnectPairs[0].m_Right.transform.position +
+            m_ConnectPairs[1].m_Left.transform.position) / 2;
             }
-            //anchorの設定
-            if (m_IsRightConnect)
+            else if (!m_IsPrevLeftConnect && m_IsCurrentLeftConnect)
             {
-                m_Player1Joint2D.anchor = (m_ConnectPairs[0].m_Right.transform.position +
-                                                m_ConnectPairs[1].m_Left.transform.position) / 2;
+                m_ConnectPosition = (m_ConnectPairs[0].m_Left.transform.position +
+            m_ConnectPairs[1].m_Right.transform.position) / 2;
             }
-            else if (m_IsLeftConnect)
-            {
-                m_Player1Joint2D.anchor = (m_ConnectPairs[0].m_Left.transform.position +
-                                                m_ConnectPairs[1].m_Right.transform.position) / 2;
-            }
-        }
-        else
-        {
-            Destroy(m_Player1Joint2D);
         }
     }
 
@@ -111,6 +108,19 @@ public class ConnectColliderManager : MonoBehaviour
         polygonCollider.isTrigger = true;
         //0.5秒後に破棄
         Destroy(obj, 0.5f);
+    }
+
+    public Vector3 GetConnectPosition(bool _IsPlayer1)
+    {
+        if (m_IsCurrentRightConnect)
+        {
+            return (_IsPlayer1) ? m_ConnectPairs[0].m_Right.transform.position : m_ConnectPairs[1].m_Left.transform.position;
+        }
+        if (m_IsCurrentLeftConnect)
+        {
+            return (_IsPlayer1) ? m_ConnectPairs[0].m_Left.transform.position : m_ConnectPairs[1].m_Right.transform.position;
+        }
+        return Vector3.zero;
     }
 
     /// <summary>

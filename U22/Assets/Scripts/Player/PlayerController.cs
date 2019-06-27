@@ -7,40 +7,23 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField, Header("プレイヤーの番号")]
     int m_ThisPlayerNumber = 0;
-    [SerializeField, Header("プレイヤーの移動速度")]
-    float m_PlayerMoveSpeed = 0.0f;
-    [SerializeField, Header("プレイヤーの回転速度")]
-    float m_PlayerRotationSpeed = 0.0f;
     [SerializeField, Header("腕の制御")]
     ArmManager m_ArmManager = new ArmManager();
     [SerializeField, Header("接続の当たり判定の管理クラス")]
     ConnectColliderManager m_ConnectColliderManager = null;
-    Rigidbody2D m_RigidBody = null;
-    //移動量を保持
-    Vector2 m_MoveValue = new Vector2();
 
     void Start()
     {
         ErrorCheck();
         //腕の初期化
         m_ArmManager.ArmInitialize(m_ThisPlayerNumber);
-        m_RigidBody = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
+        if (m_ConnectColliderManager.IsConnect) return;
         Movement();
         m_ArmManager.ArmUpdate();
-    }
-
-    void FixedUpdate()
-    {
-        m_ArmManager.ArmFixedUpdate();
-        //移動
-        m_RigidBody.MovePosition(m_RigidBody.position + m_MoveValue * Time.deltaTime * m_PlayerMoveSpeed);
-        //移動方向を向く
-        Rotation(m_MoveValue);
-        m_MoveValue = Vector2.zero;
     }
 
     /// <summary>
@@ -50,8 +33,11 @@ public class PlayerController : MonoBehaviour
     {
         float horizontal = SwitchInput.GetHorizontal(m_ThisPlayerNumber);
         float vertical = SwitchInput.GetVertical(m_ThisPlayerNumber);
-        //移動量の加算
-        m_MoveValue += new Vector2(horizontal, vertical);
+        //移動量を保持
+        Vector3 m_MoveValue = new Vector3(horizontal, vertical, 0.0f);
+        transform.position = transform.position + m_MoveValue * Config.GetInstance().PlayerMoveSpeed;
+        //移動方向を向く
+        Rotation(m_MoveValue);
     }
 
     /// <summary>
@@ -60,16 +46,15 @@ public class PlayerController : MonoBehaviour
     /// <param name="_MoveDirection">移動方向</param>
     void Rotation(Vector2 _MoveDirection)
     {
-        m_RigidBody.MoveRotation(m_RigidBody.rotation);
         if (_MoveDirection == Vector2.zero) return;
-        //始まりと終わりの回転をセット
-        Quaternion startQuaternion = Quaternion.Euler(0.0f, 0.0f, m_RigidBody.rotation);
+        //終了の回転
         Quaternion endQuaternion = Quaternion.Euler(0.0f, 0.0f,
             Mathf.Atan2(_MoveDirection.y, _MoveDirection.x) * Mathf.Rad2Deg - 90.0f);
         //補間したZを取得
-        float rotZ = Quaternion.Lerp(startQuaternion, endQuaternion, m_PlayerRotationSpeed / 100 * _MoveDirection.magnitude).eulerAngles.z;
+        var rot = Quaternion.Lerp(transform.rotation, endQuaternion,
+        Config.GetInstance().PlayerRotationSpeed / 100 * _MoveDirection.magnitude);
         //移動方向を向く
-        m_RigidBody.MoveRotation(rotZ);
+        transform.rotation = rot;
     }
 
     /// <summary>
@@ -77,14 +62,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void ErrorCheck()
     {
-        if (m_PlayerMoveSpeed <= 0.0f)
-        {
-            Debug.LogError("プレイヤーの移動速度が0以下です");
-        }
-        if (m_PlayerRotationSpeed <= 0.0f)
-        {
-            Debug.LogError("プレイヤーの回転速度が0以下です");
-        }
         if (!m_ConnectColliderManager)
         {
             Debug.LogError("接続の当たり判定の管理クラスが入っていません");
